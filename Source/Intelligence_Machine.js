@@ -1,11 +1,7 @@
 
-function Intelligence_Machine()
+class Intelligence_Machine
 {
-	// do nothing
-}
-
-{
-	Intelligence_Machine.prototype.actionDecide = function(network, actor)
+	actionDecide(network, actor)
 	{
 		var nodeCurrent = network.nodes[actor.nodeIndexPrev];
 

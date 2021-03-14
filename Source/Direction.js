@@ -1,14 +1,25 @@
 
-function Direction(name, offset)
+class Direction
 {
-	this.name = name;
-	this.offset = offset;
+	constructor(name, offset)
+	{
+		this.name = name;
+		this.offset = offset;
+	}
+
+	static Instances()
+	{
+		if (Direction._instances == null)
+		{
+			Direction._instances = new Direction_Instances();
+		}
+		return Direction._instances;
+	}
 }
 
+class Direction_Instances
 {
-	Direction.Instances = new Direction_Instances();
-
-	function Direction_Instances()
+	constructor()
 	{
 		this.East = new Direction("East", new Coords(1, 0));
 		this.North = new Direction("North", new Coords(0, -1));

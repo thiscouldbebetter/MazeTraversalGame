@@ -1,19 +1,18 @@
 
-function InputHelper()
-{}
+class InputHelper
 {
-	InputHelper.prototype.handleEventKeyDown = function(event)
+	handleEventKeyDown(event)
 	{
-		this.keyCodePressed = event.keyCode;
+		this.keyPressed = event.key;
 	}
 
-	InputHelper.prototype.initialize = function()
+	initialize()
 	{
 		document.body.onkeydown = this.handleEventKeyDown.bind(this);
 	}
 
-	InputHelper.prototype.updateForTimerTick = function()
+	updateForTimerTick()
 	{
-		this.keyCodePressed = null;
+		this.keyCode = null;
 	}
 }

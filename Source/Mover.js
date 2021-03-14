@@ -1,21 +1,22 @@
 
-function Mover(name, intelligence, nodeIndexInitial)
+class Mover
 {
-	this.name = name;
-	this.intelligence = intelligence;
-	this.nodeIndexPrev = nodeIndexInitial;
-	this.linkBeingTraversed = null;
-	this.distanceAlongLinkBeingTraversed =  0;
-	this.directionAlongLinkBeingTraversed = 0;
-
-	this.hasBeenEaten = false;
-	this.powerUpTicksRemaining = 0;
-}
-
-{
-	Mover.prototype.pos = function()
+	constructor(name, intelligence, nodeIndexInitial)
 	{
-		var network = Globals.Instance.network;
+		this.name = name;
+		this.intelligence = intelligence;
+		this.nodeIndexPrev = nodeIndexInitial;
+		this.linkBeingTraversed = null;
+		this.distanceAlongLinkBeingTraversed =  0;
+		this.directionAlongLinkBeingTraversed = 0;
+
+		this.hasBeenEaten = false;
+		this.powerUpTicksRemaining = 0;
+	}
+
+	pos()
+	{
+		var network = Globals.Instance().network;
 		var nodePrevPos = network.nodes[this.nodeIndexPrev].pos;
 
 		var nodeNextPos;
@@ -59,16 +60,14 @@ function Mover(name, intelligence, nodeIndexInitial)
 
 			returnValue.add
 			(
-				displacementFromNodePrevToMover						
+				displacementFromNodePrevToMover
 			);
 		}
 
 		return returnValue;
-
-
 	}
 
-	Mover.prototype.updateForTimerTick = function(network)
+	updateForTimerTick(network)
 	{
 		var directionToMove = this.intelligence.actionDecide
 		(
@@ -79,7 +78,7 @@ function Mover(name, intelligence, nodeIndexInitial)
 		this.updateForTimerTick2(network, directionToMove);
 	}
 
-	Mover.prototype.updateForTimerTick2 = function(network, directionToMove)
+	updateForTimerTick2(network, directionToMove)
 	{
 		var moverNodeIndexNext;
 

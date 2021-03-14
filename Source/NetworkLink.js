@@ -1,13 +1,14 @@
 
-function NetworkLink(nodeIndicesFromTo)
+class NetworkLink
 {
-	this.nodeIndicesFromTo = nodeIndicesFromTo;
+	constructor(nodeIndicesFromTo)
+	{
+		this.nodeIndicesFromTo = nodeIndicesFromTo;
 
-	this.hasBeenTraversedByPlayer = false;
-}
+		this.hasBeenTraversedByPlayer = false;
+	}
 
-{
-	NetworkLink.prototype.length = function(network)
+	length(network)
 	{
 		var returnValue = network.nodes[this.nodeIndicesFromTo[1]].pos.clone().subtract
 		(

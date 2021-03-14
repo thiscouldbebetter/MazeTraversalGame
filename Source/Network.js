@@ -1,101 +1,100 @@
 
-function Network
-(
-	name, 
-	nodes, 
-	nodeIndexPairsAdjacent, 
-	indicesOfNodesWithPowerups, 
-	numberOfEnemiesToSpawn,
-	indexOfNodeToSpawnPlayerFrom,
-	indexOfNodeToSpawnEnemiesFrom
-)
+class Network
 {
-	this.name = name;
-	this.nodes = nodes;
-
-	this.links = [];
-
-	for (var p = 0; p < nodeIndexPairsAdjacent.length; p++)
-	{
-		var nodeIndexPair = nodeIndexPairsAdjacent[p];
-
-		var nodeIndex0 = nodeIndexPair[0];
-		var nodeIndex1 = nodeIndexPair[1];
-
-		this.nodes[nodeIndex0].nodeIndicesAdjacent.push(nodeIndex1);
-		this.nodes[nodeIndex1].nodeIndicesAdjacent.push(nodeIndex0);
-
-		var link = new NetworkLink
-		(
-			[ nodeIndex0, nodeIndex1 ]
-		);
-
-		this.links.push(link);
-
-		for (var n = 0; n < link.nodeIndicesFromTo.length; n++)
-		{
-			var nodeIndexThis = link.nodeIndicesFromTo[n];
-			var nodeIndexOther = link.nodeIndicesFromTo[1 - n];
-
-			var nodeIndexThisAsString = "_" + nodeIndexThis;
-			var nodeIndexOtherAsString = "_" + nodeIndexOther;
-		
-			var linksFromThisNode = this.links[nodeIndexThisAsString];
-			if (linksFromThisNode == null)
-			{
-				linksFromThisNode = [];
-				this.links[nodeIndexThisAsString] = linksFromThisNode
-			}
-
-			linksFromThisNode[nodeIndexOtherAsString] = link;
-		}
-	}
-
-	for (var i = 0; i < indicesOfNodesWithPowerups.length; i++)
-	{
-		var indexOfNodeWithPowerup = indicesOfNodesWithPowerups[i];
-		var nodeWithPowerup = this.nodes[indexOfNodeWithPowerup];
-		nodeWithPowerup.hasPowerup = true;
-	}
-
-	this.movers = [];
-
-	this.indexOfNodeToSpawnPlayerFrom = indexOfNodeToSpawnPlayerFrom;
-
-	this.moverForPlayer = new Mover
+	constructor
 	(
-		"Player",
-		new Intelligence_Human(),
-		this.indexOfNodeToSpawnPlayerFrom 
-	);
-
-	this.movers.push(this.moverForPlayer);
-
-	this.moversForEnemies = [];
-
-	this.numberOfEnemiesToSpawn = numberOfEnemiesToSpawn;
-	this.indexOfNodeToSpawnEnemiesFrom = indexOfNodeToSpawnEnemiesFrom;
-
-	for (var i = 0; i < numberOfEnemiesToSpawn; i++)
+		name, 
+		nodes, 
+		nodeIndexPairsAdjacent, 
+		indicesOfNodesWithPowerups, 
+		numberOfEnemiesToSpawn,
+		indexOfNodeToSpawnPlayerFrom,
+		indexOfNodeToSpawnEnemiesFrom
+	)
 	{
-		var moverForEnemy = new Mover
+		this.name = name;
+		this.nodes = nodes;
+
+		this.links = [];
+
+		for (var p = 0; p < nodeIndexPairsAdjacent.length; p++)
+		{
+			var nodeIndexPair = nodeIndexPairsAdjacent[p];
+
+			var nodeIndex0 = nodeIndexPair[0];
+			var nodeIndex1 = nodeIndexPair[1];
+
+			this.nodes[nodeIndex0].nodeIndicesAdjacent.push(nodeIndex1);
+			this.nodes[nodeIndex1].nodeIndicesAdjacent.push(nodeIndex0);
+
+			var link = new NetworkLink
+			(
+				[ nodeIndex0, nodeIndex1 ]
+			);
+
+			this.links.push(link);
+
+			for (var n = 0; n < link.nodeIndicesFromTo.length; n++)
+			{
+				var nodeIndexThis = link.nodeIndicesFromTo[n];
+				var nodeIndexOther = link.nodeIndicesFromTo[1 - n];
+
+				var nodeIndexThisAsString = "_" + nodeIndexThis;
+				var nodeIndexOtherAsString = "_" + nodeIndexOther;
+			
+				var linksFromThisNode = this.links[nodeIndexThisAsString];
+				if (linksFromThisNode == null)
+				{
+					linksFromThisNode = [];
+					this.links[nodeIndexThisAsString] = linksFromThisNode
+				}
+
+				linksFromThisNode[nodeIndexOtherAsString] = link;
+			}
+		}
+
+		for (var i = 0; i < indicesOfNodesWithPowerups.length; i++)
+		{
+			var indexOfNodeWithPowerup = indicesOfNodesWithPowerups[i];
+			var nodeWithPowerup = this.nodes[indexOfNodeWithPowerup];
+			nodeWithPowerup.hasPowerup = true;
+		}
+
+		this.movers = [];
+
+		this.indexOfNodeToSpawnPlayerFrom = indexOfNodeToSpawnPlayerFrom;
+
+		this.moverForPlayer = new Mover
 		(
-			"Enemy" + i,
-			new Intelligence_Machine(),
-			this.indexOfNodeToSpawnEnemiesFrom
+			"Player",
+			new Intelligence_Human(),
+			this.indexOfNodeToSpawnPlayerFrom 
 		);
 
-		this.moversForEnemies.push(moverForEnemy);
-		this.movers.push(moverForEnemy);
+		this.movers.push(this.moverForPlayer);
+
+		this.moversForEnemies = [];
+
+		this.numberOfEnemiesToSpawn = numberOfEnemiesToSpawn;
+		this.indexOfNodeToSpawnEnemiesFrom = indexOfNodeToSpawnEnemiesFrom;
+
+		for (var i = 0; i < numberOfEnemiesToSpawn; i++)
+		{
+			var moverForEnemy = new Mover
+			(
+				"Enemy" + i,
+				new Intelligence_Machine(),
+				this.indexOfNodeToSpawnEnemiesFrom
+			);
+
+			this.moversForEnemies.push(moverForEnemy);
+			this.movers.push(moverForEnemy);
+		}
+
+		this.numberOfLinksTraversedByPlayer = 0;
 	}
 
-	this.numberOfLinksTraversedByPlayer = 0;
-}
-
-{
-	// instance methods
-
-	Network.prototype.updateForTimerTick = function()
+	updateForTimerTick()
 	{
 		for (var i = 0; i < this.movers.length; i++)
 		{
@@ -142,16 +141,13 @@ function Network
 			}
 		}
 
-
 		if (this.moverForPlayer.powerUpTicksRemaining > 0)
 		{
 			this.moverForPlayer.powerUpTicksRemaining--;
 		}
 	}
-}
 
-{
-	Network.prototype.linkConnectingNodeIndices = function(nodeIndicesConnectedByLink)
+	linkConnectingNodeIndices(nodeIndicesConnectedByLink)
 	{
 		var node0IndexAsString = "_" + nodeIndicesConnectedByLink[0];
 		var node1IndexAsString = "_" + nodeIndicesConnectedByLink[1];

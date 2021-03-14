@@ -1,11 +1,12 @@
 
-function Path(networkNodesStartToGoal)
+class Path
 {
-	this.networkNodesStartToGoal = networkNodesStartToGoal;
-}
+	constructor(networkNodesStartToGoal)
+	{
+		this.networkNodesStartToGoal = networkNodesStartToGoal;
+	}
 
-{
-	Path.findPathBetweenNodesInNetwork = function
+	static findPathBetweenNodesInNetwork
 	(
 		networkNodeStart, 
 		networkNodeGoal, 
@@ -59,7 +60,7 @@ function Path(networkNodesStartToGoal)
 		return returnValue;
 	}
 
-	Path.findPathBetweenNodesInNetwork_2 = function
+	static findPathBetweenNodesInNetwork_2
 	(
 		networkNodeStart,
 		networkNodeGoal,
@@ -128,8 +129,7 @@ function Path(networkNodesStartToGoal)
 		return returnValue;
 	}
 
-			
-	Path.findPathBetweenNodesInNetwork_3 = function
+	static findPathBetweenNodesInNetwork_3
 	(
 		networkNodeStart,
 		networkNodeGoal,
@@ -208,13 +208,13 @@ function Path(networkNodesStartToGoal)
 				pathNodeAdjacent.costToGoalEstimated = 
 					pathNodeAdjacent.costFromStartBestSoFar
 					+ costFromAdjacentToGoalEstimated;
-			}					
-		}	
+			}
+		}
 	}
 
 	// instance methods
 
-	Path.prototype.toString = function()
+	toString()
 	{
 		var nodePositions = [];
 

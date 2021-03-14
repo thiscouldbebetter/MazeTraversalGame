@@ -1,14 +1,13 @@
 
-// classes
-
-function Coords(x, y)
+class Coords
 {
-	this.x = x;
-	this.y = y;
-}
+	constructor(x, y)
+	{
+		this.x = x;
+		this.y = y;
+	}
 
-{
-	Coords.prototype.absolute = function()
+	absolute()
 	{
 		this.x = Math.abs(this.x);
 		this.y = Math.abs(this.y);
@@ -16,7 +15,7 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.add = function(other)
+	add(other)
 	{
 		this.x += other.x;
 		this.y += other.y;
@@ -24,12 +23,12 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.clone = function()
+	clone()
 	{
 		return new Coords(this.x, this.y);
 	}
 
-	Coords.prototype.divideScalar = function(scalar)
+	divideScalar(scalar)
 	{
 		this.x /= scalar;
 		this.y /= scalar;
@@ -37,17 +36,17 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.dotProduct = function(other)
+	dotProduct(other)
 	{
 		return this.x * other.x + this.y * other.y;
 	}
 
-	Coords.prototype.equals = function(other)
+	equals(other)
 	{
 		return (this.x == other.x && this.y == other.y);
 	}
 
-	Coords.prototype.magnitude = function()
+	magnitude()
 	{
 		return Math.sqrt
 		(
@@ -57,7 +56,7 @@ function Coords(x, y)
 	}
 
 
-	Coords.prototype.multiply = function(other)
+	multiply(other)
 	{
 		this.x *= other.x;
 		this.y *= other.y;
@@ -65,7 +64,7 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.multiplyScalar = function(scalar)
+	multiplyScalar(scalar)
 	{
 		this.x *= scalar;
 		this.y *= scalar;
@@ -73,7 +72,7 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.normalize = function()
+	normalize()
 	{
 		var magnitude = this.magnitude();
 
@@ -85,7 +84,7 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.overwriteWith = function(other)
+	overwriteWith(other)
 	{
 		this.x = other.x;
 		this.y = other.y;
@@ -93,7 +92,7 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.subtract = function(other)
+	subtract(other)
 	{
 		this.x -= other.x;
 		this.y -= other.y;
@@ -101,12 +100,12 @@ function Coords(x, y)
 		return this;
 	}
 
-	Coords.prototype.sumOfComponents = function()
+	sumOfComponents()
 	{
 		return this.x + this.y;
 	}
 
-	Coords.prototype.toString = function()
+	toString()
 	{
 		return "x" + this.x + "y" + this.y;
 	}

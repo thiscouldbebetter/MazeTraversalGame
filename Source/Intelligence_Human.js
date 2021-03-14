@@ -1,30 +1,26 @@
 
-function Intelligence_Human()
+class Intelligence_Human
 {
-	// do nothing
-}
-
-{
-	Intelligence_Human.prototype.actionDecide = function(network, actor)
+	actionDecide(network, actor)
 	{
 		var directionToMove;
 
-		var directionsAll = Direction.Instances._All;
+		var directionsAll = Direction.Instances()._All;
 
-		var keyCodePressed = Globals.Instance.inputHelper.keyCodePressed;
-		if (keyCodePressed == 65) // a
+		var keyPressed = Globals.Instance().inputHelper.keyPressed;
+		if (keyPressed == "a" || keyPressed == "ArrowLeft")
 		{
 			directionToMove = directionsAll.West.offset;
 		}
-		else if (keyCodePressed == 68) // d
+		else if (keyPressed == "d" || keyPressed == "ArrowRight")
 		{
 			directionToMove = directionsAll.East.offset;
 		}
-		else if (keyCodePressed == 83) // s
+		else if (keyPressed == "s" || keyPressed == "ArrowDown")
 		{
 			directionToMove = directionsAll.South.offset;
 		}
-		else if (keyCodePressed == 87) // w
+		else if (keyPressed == "w" || keyPressed == "ArrowUp")
 		{
 			directionToMove = directionsAll.North.offset;
 		}

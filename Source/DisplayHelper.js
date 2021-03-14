@@ -1,7 +1,7 @@
 
-function DisplayHelper()
+class DisplayHelper
 {
-	DisplayHelper.prototype.drawBackground = function()
+	drawBackground()
 	{
 		this.graphics.fillStyle = "White";
 		this.graphics.strokeStyle = "Gray";
@@ -19,7 +19,7 @@ function DisplayHelper()
 		);
 	}
 
-	DisplayHelper.prototype.drawNetwork = function(networkToDraw)
+	drawNetwork(networkToDraw)
 	{
 		this.graphics.strokeStyle = "Gray";
 
@@ -60,7 +60,7 @@ function DisplayHelper()
 		}
 	}
 
-	DisplayHelper.prototype.drawNetwork_Link = function(network, link)
+	drawNetwork_Link(network, link)
 	{
 		this.graphics.strokeStyle = 
 		(
@@ -78,7 +78,7 @@ function DisplayHelper()
 		this.graphics.stroke();
 	}
 
-	DisplayHelper.prototype.drawNetwork_Mover = function(network, mover)
+	drawNetwork_Mover(network, mover)
 	{
 		if (mover.name == "Player")
 		{
@@ -90,7 +90,7 @@ function DisplayHelper()
 		}
 	}
 
-	DisplayHelper.prototype.drawNetwork_Mover_Enemy = function(network, mover)
+	drawNetwork_Mover_Enemy(network, mover)
 	{
 		var cursorSize = 8;
 		var cursorSizeHalf = cursorSize / 2;
@@ -113,7 +113,7 @@ function DisplayHelper()
 
 	}
 
-	DisplayHelper.prototype.drawNetwork_Mover_Player = function(network, mover)
+	drawNetwork_Mover_Player(network, mover)
 	{
 		var cursorSize = 8;
 		var cursorSizeHalf = cursorSize / 2;
@@ -188,7 +188,7 @@ function DisplayHelper()
 		);
 	}
 
-	DisplayHelper.prototype.drawNetwork_Node = function(network, node)
+	drawNetwork_Node(network, node)
 	{
 		if (node.hasPowerup == true)
 		{
@@ -208,7 +208,7 @@ function DisplayHelper()
 		}
 	}
 
-	DisplayHelper.prototype.initialize = function(viewSize)
+	initialize(viewSize)
 	{
 		this.viewSize = viewSize;
 

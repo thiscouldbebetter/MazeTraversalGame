@@ -1,14 +1,20 @@
 
-function Globals()
-{}
+class Globals
 {
 	// instance
 
-	Globals.Instance = new Globals();
+	static Instance()
+	{
+		if (Globals._instance == null)
+		{
+			Globals._instance = new Globals();
+		}
+		return Globals._instance;
+	}
 
 	// instance methods
 
-	Globals.prototype.handleEventTimerTick = function()
+	handleEventTimerTick()
 	{
 		this.network.updateForTimerTick();
 
@@ -21,7 +27,7 @@ function Globals()
 		);
 	}
 
-	Globals.prototype.initialize = function
+	initialize
 	(
 		millisecondsPerTimerTick,
 		viewSizeInPixels,

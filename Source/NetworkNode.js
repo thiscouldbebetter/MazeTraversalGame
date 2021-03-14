@@ -1,22 +1,23 @@
 
-function NetworkNode(index, pos, nodeIndicesAdjacent)
+class NetworkNode
 {
-	this.index = index;
-	this.pos = pos;
-	this.nodeIndicesAdjacent = nodeIndicesAdjacent;
-
-	if (this.nodeIndicesAdjacent == null)
+	constructor(index, pos, nodeIndicesAdjacent)
 	{
-		this.nodeIndicesAdjacent = [];
+		this.index = index;
+		this.pos = pos;
+		this.nodeIndicesAdjacent = nodeIndicesAdjacent;
+
+		if (this.nodeIndicesAdjacent == null)
+		{
+			this.nodeIndicesAdjacent = [];
+		}
+
+		this.hasPowerup = false;
 	}
 
-	this.hasPowerup = false;
-}
-
-{
 	// static methods
 
-	NetworkNode.buildManyFromMapAsStrings = function
+	static buildManyFromMapAsStrings
 	(
 		mapCellSizeInPixels,
 		mapAsStrings
@@ -72,7 +73,7 @@ function NetworkNode(index, pos, nodeIndicesAdjacent)
 		return nodes;
 	}
 
-	NetworkNode.buildManyFromPositions = function(nodePositions)
+	static buildManyFromPositions(nodePositions)
 	{
 		var returnValues = [];
 
@@ -88,7 +89,7 @@ function NetworkNode(index, pos, nodeIndicesAdjacent)
 
 	// instance methods
 
-	NetworkNode.prototype.nodesAdjacentInNetworkAddToList = function(network, listToAddTo)
+	nodesAdjacentInNetworkAddToList(network, listToAddTo)
 	{
 		for (var i = 0; i < this.nodeIndicesAdjacent.length; i++)
 		{
