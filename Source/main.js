@@ -185,11 +185,25 @@ function main()
 
 	var displaySizeInPixels =
 		networkMax.add(networkMin);
+	var display = new Display(displaySizeInPixels);
 
-	Globals.Instance().initialize
+	var ticksPerSecond = 25;
+	var timerHelper = new TimerHelper(ticksPerSecond);
+
+	var world = new World
 	(
-		100, // millisecondsPerTimerTick
-		displaySizeInPixels,
-		network0
+		"World0",
+		[
+			new PlaceNetwork("Place0", network0)
+		]
 	);
+
+	var universe = new Universe
+	(
+		display,
+		timerHelper,
+		world
+	);
+
+	universe.initialize();
 }

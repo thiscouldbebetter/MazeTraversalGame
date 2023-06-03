@@ -1,13 +1,14 @@
 
 class Intelligence_Human
 {
-	actionDecide(network, actor)
+	actionDecide(universe, world, place, actor)
 	{
 		var directionToMove;
 
 		var directionsAll = Direction.Instances()._All;
 
-		var keyPressed = Globals.Instance().inputHelper.keyPressed;
+		var inputHelper = universe.inputHelper;
+		var keyPressed = inputHelper.keyPressed;
 		if (keyPressed == "a" || keyPressed == "ArrowLeft")
 		{
 			directionToMove = directionsAll.West.offset;

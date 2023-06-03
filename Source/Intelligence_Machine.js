@@ -1,8 +1,9 @@
 
 class Intelligence_Machine
 {
-	actionDecide(network, actor)
+	actionDecide(universe, world, place, actor)
 	{
+		var network = place.network;
 		var nodeCurrent = network.nodes[actor.nodeIndexPrev];
 
 		if (actor.path == null)

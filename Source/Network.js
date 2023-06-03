@@ -94,59 +94,6 @@ class Network
 		this.numberOfLinksTraversedByPlayer = 0;
 	}
 
-	updateForTimerTick()
-	{
-		for (var i = 0; i < this.movers.length; i++)
-		{
-			var mover = this.movers[i];
-			mover.updateForTimerTick(this);
-		}
-
-		if (this.moverForPlayer.hasBeenEaten == true)
-		{
-			return;
-		}
-
-		var collisionRadius = 4;
-
-		for (var i = 0; i < this.moversForEnemies.length; i++)
-		{
-			var moverForEnemy = this.moversForEnemies[i];
-			if (moverForEnemy.hasBeenEaten == false)
-			{
-				var distanceFromEnemyToPlayer = 
-					this.moverForPlayer.pos().subtract
-					(
-						moverForEnemy.pos()
-					).magnitude();
-
-				if (distanceFromEnemyToPlayer <= collisionRadius)
-				{
-					if (this.moverForPlayer.powerUpTicksRemaining == 0)
-					{
-						this.moverForPlayer.hasBeenEaten = true;
-						this.movers.splice
-						(
-							this.movers.indexOf(this.moverForPlayer),
-							1
-						);
-						document.write("You lose!");
-						break;
-					}
-					else
-					{
-						moverForEnemy.hasBeenEaten = true;
-					}
-				}
-			}
-		}
-
-		if (this.moverForPlayer.powerUpTicksRemaining > 0)
-		{
-			this.moverForPlayer.powerUpTicksRemaining--;
-		}
-	}
-
 	linkConnectingNodeIndices(nodeIndicesConnectedByLink)
 	{
 		var node0IndexAsString =
@@ -193,4 +140,213 @@ class Network
 
 		return [nodePosMin, nodePosMax];
 	}
+
+	// Drawing.
+
+	drawToDisplay(display)
+	{
+		var g = display.graphics;
+
+		g.strokeStyle = display.colorFore;
+
+		var links = this.links;
+		var nodes = this.nodes;
+		var movers = this.movers;
+
+		links.forEach
+		(
+			link =>
+				this.drawToDisplay_Link(display, link)
+		);
+
+		nodes.forEach
+		(
+			node =>
+				this.drawToDisplay_Node(display, node)
+		);
+
+		movers.forEach
+		(
+			mover =>
+				this.drawToDisplay_Mover(display, mover)
+		);
+	}
+
+	drawToDisplay_Link(display, link)
+	{
+		var g = display.graphics;
+		g.strokeStyle = 
+		(
+			link.hasBeenTraversedByPlayer
+			? display.colorHighlight
+			: display.colorFore
+		); 
+
+		var nodes = this.nodes;
+
+		var nodeFromIndex = link.nodeIndicesFromTo[0];
+		var nodeToIndex = link.nodeIndicesFromTo[1];
+
+		var nodeFrom = nodes[nodeFromIndex];
+		var nodeTo = nodes[nodeToIndex];
+
+		var startPos = nodeFrom.pos;
+		var endPos = nodeTo.pos
+
+		g.beginPath();
+		g.moveTo(startPos.x, startPos.y);
+		g.lineTo(endPos.x, endPos.y);
+		g.stroke();
+	}
+
+	drawToDisplay_Mover(display, mover)
+	{
+		if (mover.name == "Player")
+		{
+			this.drawToDisplay_Mover_Player(display, mover);
+		}
+		else
+		{
+			this.drawToDisplay_Mover_Enemy(display, mover);
+		}
+	}
+
+	drawToDisplay_Mover_Enemy(display, mover)
+	{
+		var enemySize = 8;
+		var enemySizeHalf = enemySize / 2;
+
+		var drawPos = mover.pos(this);
+
+		var colorToUse = 
+		(
+			mover.hasBeenEaten
+			? display.colorLowlight
+			: display.colorHighlight
+		);
+
+		var g = display.graphics;
+		g.strokeStyle = colorToUse;
+		g.moveTo
+		(
+			drawPos.x,	drawPos.y - enemySizeHalf
+		),
+		g.lineTo
+		(
+			drawPos.x + enemySizeHalf,
+			drawPos.y + enemySizeHalf
+		),
+		g.lineTo
+		(
+			drawPos.x - enemySizeHalf,
+			drawPos.y + enemySizeHalf
+		),
+		g.closePath();
+		g.stroke();
+	}
+
+	drawToDisplay_Mover_Player(display, mover)
+	{
+		var playerSize = 8;
+		var playerSizeHalf = playerSize / 2;
+
+		var nodes = this.nodes;
+		var nodeIndex = mover.nodeIndexPrev;
+		var nodePrevPos = nodes[nodeIndex].pos;
+
+		var nodeNextPos;
+
+		var linkBeingTraversed = mover.linkBeingTraversed;
+
+		if (linkBeingTraversed == null)
+		{
+			nodeNextPos = nodePrevPos;
+		}
+		else
+		{
+			var nodeNextIndex = 
+			(
+				linkBeingTraversed.nodeIndicesFromTo[0] == mover.nodeIndexPrev
+				? linkBeingTraversed.nodeIndicesFromTo[1]
+				: linkBeingTraversed.nodeIndicesFromTo[0]
+			);
+
+			var nodeNext = nodes[nodeNextIndex];
+			var nodeNextPos = nodeNext.pos;
+		}
+
+		var displacementFromNodePrevToNext =
+			nodeNextPos.clone().subtract
+			(
+				nodePrevPos
+			);
+
+		var distanceFromNodePrevToNext =
+			displacementFromNodePrevToNext.magnitude();
+
+		var drawPos = nodePrevPos.clone();
+
+		if (distanceFromNodePrevToNext > 0)
+		{
+			var displacementFromNodePrevToMover =
+				displacementFromNodePrevToNext.divideScalar
+				(
+					distanceFromNodePrevToNext
+				).multiplyScalar
+				(
+					mover.distanceAlongLinkBeingTraversed
+				);
+
+			drawPos.add
+			(
+				displacementFromNodePrevToMover
+			);
+		}
+
+		var g = display.graphics;
+
+		g.strokeStyle = display.colorHighlight;
+		g.beginPath();
+		g.moveTo(nodePrevPos.x, nodePrevPos.y);
+		g.lineTo(drawPos.x, drawPos.y);
+		g.stroke();
+
+		var colorToUse = 
+		(
+			mover.powerUpTicksRemaining > 0 
+			? display.colorBack
+			: display.colorFore
+		);
+
+		g.strokeStyle = display.colorHighlight;
+		g.strokeRect
+		(
+			drawPos.x - playerSizeHalf,
+			drawPos.y - playerSizeHalf,
+			playerSize,
+			playerSize
+		);
+	}
+
+	drawToDisplay_Node(display, node)
+	{
+		if (node.hasPowerup)
+		{
+			var powerupSize = 8;
+			var powerupSizeHalf = powerupSize / 2;
+
+			var drawPos = node.pos;
+
+			var g = display.graphics;
+			g.strokeStyle = display.colorFore;
+			g.beginPath();
+			g.moveTo(drawPos.x - powerupSizeHalf, drawPos.y);
+			g.lineTo(drawPos.x, drawPos.y - powerupSizeHalf);
+			g.lineTo(drawPos.x + powerupSizeHalf, drawPos.y);
+			g.lineTo(drawPos.x, drawPos.y + powerupSizeHalf);
+			g.closePath();
+			g.stroke();
+		}
+	}
+
 }

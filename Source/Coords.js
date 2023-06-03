@@ -12,6 +12,11 @@ class Coords
 		return new Coords(1, 1);
 	}
 
+	static zeroes()
+	{
+		return new Coords(0, 0);
+	}
+
 	absolute()
 	{
 		this.x = Math.abs(this.x);
