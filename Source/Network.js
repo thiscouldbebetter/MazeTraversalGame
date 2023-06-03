@@ -149,10 +149,48 @@ class Network
 
 	linkConnectingNodeIndices(nodeIndicesConnectedByLink)
 	{
-		var node0IndexAsString = "_" + nodeIndicesConnectedByLink[0];
-		var node1IndexAsString = "_" + nodeIndicesConnectedByLink[1];
+		var node0IndexAsString =
+			"_" + nodeIndicesConnectedByLink[0];
+		var node1IndexAsString =
+			"_" + nodeIndicesConnectedByLink[1];
 
-		var returnValue = this.links[node0IndexAsString][node1IndexAsString];
+		var returnValue =
+			this.links[node0IndexAsString][node1IndexAsString];
+
 		return returnValue;
+	}
+
+	nodePositionsMinAndMax()
+	{
+		var node0Pos = this.nodes[0].pos;
+
+		var nodePosMin = node0Pos.clone();
+		var nodePosMax = node0Pos.clone();
+
+		this.nodes.forEach
+		(
+			node =>
+			{
+				var nodePos = node.pos;
+				if (nodePos.x < nodePosMin.x)
+				{
+					nodePosMin.x = nodePos.x;
+				}
+				if (nodePos.x > nodePosMax.x)
+				{
+					nodePosMax.x = nodePos.x;
+				}
+				if (nodePos.y < nodePosMin.y)
+				{
+					nodePosMin.y = nodePos.y;
+				}
+				if (nodePos.y > nodePosMax.y)
+				{
+					nodePosMax.y = nodePos.y;
+				}
+			}
+		);
+
+		return [nodePosMin, nodePosMax];
 	}
 }

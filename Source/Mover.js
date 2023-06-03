@@ -39,24 +39,27 @@ class Mover
 			var nodeNextPos = network.nodes[nodeNextIndex].pos;
 		}
 
-		var displacementFromNodePrevToNext = nodeNextPos.clone().subtract
-		(
-			nodePrevPos
-		);
+		var displacementFromNodePrevToNext =
+			nodeNextPos.clone().subtract
+			(
+				nodePrevPos
+			);
 
-		var distanceFromNodePrevToNext = displacementFromNodePrevToNext.magnitude();
+		var distanceFromNodePrevToNext =
+			displacementFromNodePrevToNext.magnitude();
 
 		var returnValue = nodePrevPos.clone();
 
 		if (distanceFromNodePrevToNext > 0)
 		{
-			var displacementFromNodePrevToMover = displacementFromNodePrevToNext.divideScalar
-			(
-				distanceFromNodePrevToNext
-			).multiplyScalar
-			(
-				this.distanceAlongLinkBeingTraversed
-			);
+			var displacementFromNodePrevToMover =
+				displacementFromNodePrevToNext.divideScalar
+				(
+					distanceFromNodePrevToNext
+				).multiplyScalar
+				(
+					this.distanceAlongLinkBeingTraversed
+				);
 
 			returnValue.add
 			(
@@ -82,7 +85,9 @@ class Mover
 	{
 		var moverNodeIndexNext;
 
-		if (this.linkBeingTraversed == null)
+		var linkBeingTraversed = this.linkBeingTraversed;
+
+		if (linkBeingTraversed == null)
 		{
 			moverNodeIndexNext = this.nodeIndexPrev;
 		}
@@ -90,9 +95,9 @@ class Mover
 		{
 			moverNodeIndexNext = 
 			(
-				this.linkBeingTraversed.nodeIndicesFromTo[0] == this.nodeIndexPrev
-				? this.linkBeingTraversed.nodeIndicesFromTo[1]
-				: this.linkBeingTraversed.nodeIndicesFromTo[0]
+				linkBeingTraversed.nodeIndicesFromTo[0] == this.nodeIndexPrev
+				? linkBeingTraversed.nodeIndicesFromTo[1]
+				: linkBeingTraversed.nodeIndicesFromTo[0]
 			);
 		}
 
@@ -100,9 +105,10 @@ class Mover
 		{
 			var moverNodePrev = network.nodes[this.nodeIndexPrev];
 
-			if (this.linkBeingTraversed == null)
+			if (linkBeingTraversed == null)
 			{
-				var nodeIndicesAdjacent = moverNodePrev.nodeIndicesAdjacent;
+				var nodeIndicesAdjacent =
+					moverNodePrev.nodeIndicesAdjacent;
 
 				for (var n = 0; n < nodeIndicesAdjacent.length; n++)
 				{
@@ -112,14 +118,15 @@ class Mover
 					(
 						moverNodePrev.pos
 					);
-	
+
 					if (directionToNodeAdjacent.dotProduct(directionToMove) > 0)
-					{	
-						this.linkBeingTraversed = network.linkConnectingNodeIndices
+					{
+						linkBeingTraversed = network.linkConnectingNodeIndices
 						([
 							this.nodeIndexPrev,
 							nodeIndexAdjacent
 						]);
+						this.linkBeingTraversed = linkBeingTraversed;
 						this.directionAlongLinkBeingTraversed = 1;
 						break;
 					}
@@ -128,11 +135,12 @@ class Mover
 			else
 			{
 				var moverNodeNext = network.nodes[moverNodeIndexNext];
-				 
-				var directionToNodeNext = moverNodeNext.pos.clone().subtract
-				(
-					moverNodePrev.pos
-				);
+
+				var directionToNodeNext =
+					moverNodeNext.pos.clone().subtract
+					(
+						moverNodePrev.pos
+					);
 
 				var value =
 					directionToNodeNext.dotProduct(directionToMove)
@@ -140,45 +148,56 @@ class Mover
 
 				var shouldDirectionBeReversed = (value < 0);
 				
-				if (shouldDirectionBeReversed == true)
+				if (shouldDirectionBeReversed)
 				{
 					this.directionAlongLinkBeingTraversed *= -1;
-				}	
+				}
 			}
 		}
 
-		if (this.linkBeingTraversed != null)
+		if (linkBeingTraversed != null)
 		{
 			var moverSpeed = 2; // hack
-			var moverVelocity = moverSpeed * this.directionAlongLinkBeingTraversed;
+
+			var moverVelocity =
+				moverSpeed
+				* this.directionAlongLinkBeingTraversed;
+
 			this.distanceAlongLinkBeingTraversed += moverVelocity;
 
 			if (moverVelocity > 0)
 			{
-				var lengthOfLink = this.linkBeingTraversed.length(network);
+				var lengthOfLink =
+					linkBeingTraversed.length(network);
 
 				if (this.distanceAlongLinkBeingTraversed >= lengthOfLink)
 				{
 					if (this.name == "Player")
 					{
-						if (this.linkBeingTraversed.hasBeenTraversedByPlayer == false)
+						if (linkBeingTraversed.hasBeenTraversedByPlayer == false)
 						{
-							this.linkBeingTraversed.hasBeenTraversedByPlayer = true;
+							linkBeingTraversed.hasBeenTraversedByPlayer = true;
 							network.numberOfLinksTraversedByPlayer++;
 							if (network.numberOfLinksTraversedByPlayer >= network.links.length)
 							{
 								alert("You win!");
-							}	
+							}
 						}
 
 						var nodeArrivedAt = network.nodes[moverNodeIndexNext];
-						if (nodeArrivedAt.hasPowerup == true)
+
+						if (nodeArrivedAt.hasPowerup)
 						{
 							nodeArrivedAt.hasPowerup = false;
 							this.powerUpTicksRemaining = 100;
 						}
+
+						if (nodeArrivedAt.nodeToTeleportToIndex != null)
+						{
+							todo
+						}
 					}
-					else if (this.name.indexOf("Enemy") == 0)
+					else if (this.name.startsWith("Enemy") )
 					{
 						if (this.hasBeenEaten == true)
 						{

@@ -7,6 +7,11 @@ class Coords
 		this.y = y;
 	}
 
+	static ones()
+	{
+		return new Coords(1, 1);
+	}
+
 	absolute()
 	{
 		this.x = Math.abs(this.x);

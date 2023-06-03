@@ -1,17 +1,18 @@
 
 class NetworkNode
 {
-	constructor(index, pos, nodeIndicesAdjacent)
+	constructor
+	(
+		index,
+		pos,
+		nodeIndicesAdjacent
+	)
 	{
 		this.index = index;
 		this.pos = pos;
-		this.nodeIndicesAdjacent = nodeIndicesAdjacent;
+		this.nodeIndicesAdjacent = nodeIndicesAdjacent || [];
 
-		if (this.nodeIndicesAdjacent == null)
-		{
-			this.nodeIndicesAdjacent = [];
-		}
-
+		this.nodeIndexToTeleportTo = null;
 		this.hasPowerup = false;
 	}
 

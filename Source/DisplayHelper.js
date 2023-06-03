@@ -1,27 +1,36 @@
 
 class DisplayHelper
 {
+	constructor()
+	{
+		this.colorFore = "Gray";
+		this.colorHighlight = "White";
+		this.colorLowlight = "DarkGray";
+		this.colorBack = "Black";
+	}
+
 	drawBackground()
 	{
-		this.graphics.fillStyle = "White";
-		this.graphics.strokeStyle = "Gray";
+		var g = this.graphics;
+		g.fillStyle = this.colorBack;
+		g.strokeStyle = this.colorFore;
 
-		this.graphics.fillRect
+		g.fillRect
 		(
 			0, 0,
 			this.viewSize.x, this.viewSize.y
 		);
 
-		this.graphics.strokeRect
+		g.strokeRect
 		(
 			0, 0,
 			this.viewSize.x, this.viewSize.y
 		);
 	}
 
-	drawNetwork(networkToDraw)
+	drawNetwork(networkToDraw, colorName)
 	{
-		this.graphics.strokeStyle = "Gray";
+		this.graphics.strokeStyle = this.colorFore;
 
 		var links = networkToDraw.links;
 		var nodes = networkToDraw.nodes;
@@ -35,7 +44,7 @@ class DisplayHelper
 			(
 				networkToDraw,
 				link
-			);	
+			);
 		}
 
 		for (var i = 0; i < nodes.length; i++)
@@ -64,18 +73,19 @@ class DisplayHelper
 	{
 		this.graphics.strokeStyle = 
 		(
-			link.hasBeenTraversedByPlayer == true 
-			? "Black"
-			: "Gray"
+			link.hasBeenTraversedByPlayer
+			? this.colorHighlight
+			: this.colorFore
 		); 
 
 		var startPos = network.nodes[link.nodeIndicesFromTo[0]].pos;
 		var endPos = network.nodes[link.nodeIndicesFromTo[1]].pos
 
-		this.graphics.beginPath();
-		this.graphics.moveTo(startPos.x, startPos.y);
-		this.graphics.lineTo(endPos.x, endPos.y);
-		this.graphics.stroke();
+		var g = this.graphics;
+		g.beginPath();
+		g.moveTo(startPos.x, startPos.y);
+		g.lineTo(endPos.x, endPos.y);
+		g.stroke();
 	}
 
 	drawNetwork_Mover(network, mover)
@@ -99,18 +109,18 @@ class DisplayHelper
 
 		var colorToUse = 
 		(
-			mover.hasBeenEaten == true
-			? "LightGray"
-			: "Gray"
+			mover.hasBeenEaten
+			? this.colorLowlight
+			: this.colorHighlight
 		);
 
-		this.graphics.strokeStyle = colorToUse;
-		this.graphics.moveTo(drawPos.x,	drawPos.y - cursorSizeHalf),
-		this.graphics.lineTo(drawPos.x + cursorSizeHalf, drawPos.y + cursorSizeHalf),
-		this.graphics.lineTo(drawPos.x - cursorSizeHalf, drawPos.y + cursorSizeHalf),
-		this.graphics.closePath();
-		this.graphics.stroke();
-
+		var g = this.graphics;
+		g.strokeStyle = colorToUse;
+		g.moveTo(drawPos.x,	drawPos.y - cursorSizeHalf),
+		g.lineTo(drawPos.x + cursorSizeHalf, drawPos.y + cursorSizeHalf),
+		g.lineTo(drawPos.x - cursorSizeHalf, drawPos.y + cursorSizeHalf),
+		g.closePath();
+		g.stroke();
 	}
 
 	drawNetwork_Mover_Player(network, mover)
@@ -145,41 +155,45 @@ class DisplayHelper
 			nodePrevPos
 		);
 
-		var distanceFromNodePrevToNext = displacementFromNodePrevToNext.magnitude();
+		var distanceFromNodePrevToNext =
+			displacementFromNodePrevToNext.magnitude();
 
 		var drawPos = nodePrevPos.clone();
 
 		if (distanceFromNodePrevToNext > 0)
 		{
-			var displacementFromNodePrevToMover = displacementFromNodePrevToNext.divideScalar
-			(
-				distanceFromNodePrevToNext
-			).multiplyScalar
-			(
-				mover.distanceAlongLinkBeingTraversed
-			);
+			var displacementFromNodePrevToMover =
+				displacementFromNodePrevToNext.divideScalar
+				(
+					distanceFromNodePrevToNext
+				).multiplyScalar
+				(
+					mover.distanceAlongLinkBeingTraversed
+				);
 
 			drawPos.add
 			(
-				displacementFromNodePrevToMover						
+				displacementFromNodePrevToMover
 			);
 		}
 
-		this.graphics.strokeStyle = "Black";
-		this.graphics.beginPath();
-		this.graphics.moveTo(nodePrevPos.x, nodePrevPos.y);
-		this.graphics.lineTo(drawPos.x, drawPos.y);
-		this.graphics.stroke();
+		var g = this.graphics;
+
+		g.strokeStyle = this.colorHighlight;
+		g.beginPath();
+		g.moveTo(nodePrevPos.x, nodePrevPos.y);
+		g.lineTo(drawPos.x, drawPos.y);
+		g.stroke();
 
 		var colorToUse = 
 		(
 			mover.powerUpTicksRemaining > 0 
-			? "Black"
-			: "Gray"
+			? this.colorBack
+			: this.colorFore
 		);
 
-		this.graphics.strokeStyle = "Gray";	
-		this.graphics.strokeRect
+		g.strokeStyle = this.colorHighlight;
+		g.strokeRect
 		(
 			drawPos.x - cursorSizeHalf,
 			drawPos.y - cursorSizeHalf,
@@ -190,21 +204,22 @@ class DisplayHelper
 
 	drawNetwork_Node(network, node)
 	{
-		if (node.hasPowerup == true)
+		if (node.hasPowerup)
 		{
 			var powerupSize = 8;
 			var powerupSizeHalf = powerupSize / 2;
 
 			var drawPos = node.pos;
 
-			this.graphics.strokeStyle = "Gray";
-			this.graphics.beginPath();
-			this.graphics.moveTo(drawPos.x - powerupSizeHalf, drawPos.y);
-			this.graphics.lineTo(drawPos.x, drawPos.y - powerupSizeHalf);
-			this.graphics.lineTo(drawPos.x + powerupSizeHalf, drawPos.y);
-			this.graphics.lineTo(drawPos.x, drawPos.y + powerupSizeHalf);
-			this.graphics.closePath();
-			this.graphics.stroke();
+			var g = this.graphics;
+			g.strokeStyle = this.colorFore;
+			g.beginPath();
+			g.moveTo(drawPos.x - powerupSizeHalf, drawPos.y);
+			g.lineTo(drawPos.x, drawPos.y - powerupSizeHalf);
+			g.lineTo(drawPos.x + powerupSizeHalf, drawPos.y);
+			g.lineTo(drawPos.x, drawPos.y + powerupSizeHalf);
+			g.closePath();
+			g.stroke();
 		}
 	}
 
