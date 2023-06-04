@@ -9,37 +9,60 @@ class Display
 		this.colorHighlight = "White";
 		this.colorLowlight = "DarkGray";
 		this.colorBack = "Black";
+
+		this._drawPos = new Coords();
+		this._sizeHalf = new Coords();
 	}
 
 	drawBackground(color)
 	{
-		this.drawRectangleAtPosWithSizeAndColorsFillAndBorder
+		this.drawRectangleOfSizeAtPosWithColorsFillAndBorder
 		(
-			Coords.zeroes(),
 			this.sizeInPixels,
-			this.colorBack,
+			Coords.zeroes(),
+			color,
 			null // colorBorder
 		);
 	}
 
-	drawRectangleAtPosWithSizeAndColorsFillAndBorder
+	drawRectangleOfSizeAtPosWithColorsFillAndBorder
 	(
-		pos, size, colorFill, colorBorder
+		size, pos, colorFill, colorBorder
 	)
 	{
 		var g = this.graphics;
 
 		if (colorFill != null)
 		{
-			g.fillStyle = colorFill;
-			g.fillRect(pos.x, pos.y, size.x, size.y);
+			g.fillStyle = colorFill.systemColor;
+			g.fillRect
+			(
+				pos.x, pos.y,
+				size.x, size.y
+			);
 		}
 
 		if (colorBorder != null)
 		{
-			g.strokeStyle = colorBorder;
+			g.strokeStyle = colorBorder.systemColor;
 			g.strokeRect(pos.x, pos.y, size.x, size.y);
 		}
+	}
+
+	drawRectangleOfSizeWithCenterAndColorsFillAndBorder
+	(
+		size, pos, colorFill, colorBorder
+	)
+	{
+		var sizeHalf =
+			this._sizeHalf.overwriteWith(size).half();
+		var drawPos =
+			this._drawPos.overwriteWith(pos).subtract(sizeHalf);
+
+		this.drawRectangleOfSizeAtPosWithColorsFillAndBorder
+		(
+			size, drawPos, colorFill, colorBorder
+		);
 	}
 
 	initialize()

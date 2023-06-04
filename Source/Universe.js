@@ -29,7 +29,7 @@ class Universe
 
 		this.inputHelper.updateForTimerTick(this);
 
-		this.world.drawToDisplay(this.display);
+		this.world.draw(this);
 	}
 
 }

@@ -60,6 +60,8 @@ class Network
 			nodeWithPowerup.hasPowerup = true;
 		}
 
+		var moverDefns = MoverDefn.Instances();
+
 		this.movers = [];
 
 		this.indexOfNodeToSpawnPlayerFrom = indexOfNodeToSpawnPlayerFrom;
@@ -67,6 +69,7 @@ class Network
 		this.moverForPlayer = new Mover
 		(
 			"Player",
+			moverDefns.Player.name,
 			new Intelligence_Human(),
 			this.indexOfNodeToSpawnPlayerFrom 
 		);
@@ -83,6 +86,7 @@ class Network
 			var moverForEnemy = new Mover
 			(
 				"Enemy" + i,
+				moverDefns.Enemy.name,
 				new Intelligence_Machine(),
 				this.indexOfNodeToSpawnEnemiesFrom
 			);
@@ -143,8 +147,10 @@ class Network
 
 	// Drawing.
 
-	drawToDisplay(display)
+	draw(universe, world, place)
 	{
+		var display = universe.display;
+
 		var g = display.graphics;
 
 		g.strokeStyle = display.colorFore;
@@ -167,8 +173,7 @@ class Network
 
 		movers.forEach
 		(
-			mover =>
-				this.drawToDisplay_Mover(display, mover)
+			mover => mover.draw(universe, world, place)
 		);
 	}
 
@@ -197,135 +202,6 @@ class Network
 		g.moveTo(startPos.x, startPos.y);
 		g.lineTo(endPos.x, endPos.y);
 		g.stroke();
-	}
-
-	drawToDisplay_Mover(display, mover)
-	{
-		if (mover.name == "Player")
-		{
-			this.drawToDisplay_Mover_Player(display, mover);
-		}
-		else
-		{
-			this.drawToDisplay_Mover_Enemy(display, mover);
-		}
-	}
-
-	drawToDisplay_Mover_Enemy(display, mover)
-	{
-		var enemySize = 8;
-		var enemySizeHalf = enemySize / 2;
-
-		var drawPos = mover.pos(this);
-
-		var colorToUse = 
-		(
-			mover.hasBeenEaten
-			? display.colorLowlight
-			: display.colorHighlight
-		);
-
-		var g = display.graphics;
-		g.strokeStyle = colorToUse;
-		g.moveTo
-		(
-			drawPos.x,	drawPos.y - enemySizeHalf
-		),
-		g.lineTo
-		(
-			drawPos.x + enemySizeHalf,
-			drawPos.y + enemySizeHalf
-		),
-		g.lineTo
-		(
-			drawPos.x - enemySizeHalf,
-			drawPos.y + enemySizeHalf
-		),
-		g.closePath();
-		g.stroke();
-	}
-
-	drawToDisplay_Mover_Player(display, mover)
-	{
-		var playerSize = 8;
-		var playerSizeHalf = playerSize / 2;
-
-		var nodes = this.nodes;
-		var nodeIndex = mover.nodeIndexPrev;
-		var nodePrevPos = nodes[nodeIndex].pos;
-
-		var nodeNextPos;
-
-		var linkBeingTraversed = mover.linkBeingTraversed;
-
-		if (linkBeingTraversed == null)
-		{
-			nodeNextPos = nodePrevPos;
-		}
-		else
-		{
-			var nodeNextIndex = 
-			(
-				linkBeingTraversed.nodeIndicesFromTo[0] == mover.nodeIndexPrev
-				? linkBeingTraversed.nodeIndicesFromTo[1]
-				: linkBeingTraversed.nodeIndicesFromTo[0]
-			);
-
-			var nodeNext = nodes[nodeNextIndex];
-			var nodeNextPos = nodeNext.pos;
-		}
-
-		var displacementFromNodePrevToNext =
-			nodeNextPos.clone().subtract
-			(
-				nodePrevPos
-			);
-
-		var distanceFromNodePrevToNext =
-			displacementFromNodePrevToNext.magnitude();
-
-		var drawPos = nodePrevPos.clone();
-
-		if (distanceFromNodePrevToNext > 0)
-		{
-			var displacementFromNodePrevToMover =
-				displacementFromNodePrevToNext.divideScalar
-				(
-					distanceFromNodePrevToNext
-				).multiplyScalar
-				(
-					mover.distanceAlongLinkBeingTraversed
-				);
-
-			drawPos.add
-			(
-				displacementFromNodePrevToMover
-			);
-		}
-
-		var g = display.graphics;
-
-		g.strokeStyle = display.colorHighlight;
-		g.beginPath();
-		g.moveTo(nodePrevPos.x, nodePrevPos.y);
-		g.lineTo(drawPos.x, drawPos.y);
-		g.stroke();
-
-		var colorToUse = 
-		(
-			mover.powerUpTicksRemaining > 0 
-			? display.colorBack
-			: display.colorFore
-		);
-
-		g.strokeStyle = display.colorHighlight;
-		g.strokeRect
-		(
-			drawPos.x - playerSizeHalf,
-			drawPos.y - playerSizeHalf,
-			playerSize,
-			playerSize
-		);
 	}
 
 	drawToDisplay_Node(display, node)

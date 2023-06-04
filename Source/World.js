@@ -17,10 +17,10 @@ class World
 
 	// Drawing.
 
-	drawToDisplay(display)
+	draw(universe)
 	{
 		var placeCurrent = this.placeCurrent();
-		placeCurrent.drawToDisplay(display);
+		placeCurrent.draw(universe, this);
 	}
 
 	// Places.

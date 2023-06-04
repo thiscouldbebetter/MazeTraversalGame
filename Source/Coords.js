@@ -56,6 +56,11 @@ class Coords
 		return (this.x == other.x && this.y == other.y);
 	}
 
+	half()
+	{
+		return this.divideScalar(2);
+	}
+
 	magnitude()
 	{
 		return Math.sqrt

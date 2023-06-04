@@ -1,9 +1,10 @@
 
 class Mover
 {
-	constructor(name, intelligence, nodeIndexInitial)
+	constructor(name, defnName, intelligence, nodeIndexInitial)
 	{
 		this.name = name;
+		this.defnName = defnName;
 		this.intelligence = intelligence;
 		this.nodeIndexPrev = nodeIndexInitial;
 		this.linkBeingTraversed = null;
@@ -12,6 +13,11 @@ class Mover
 
 		this.hasBeenEaten = false;
 		this.powerUpTicksRemaining = 0;
+	}
+
+	defn()
+	{
+		return MoverDefn.byName(this.defnName);
 	}
 
 	pos(network)
@@ -246,6 +252,94 @@ class Mover
 				this.directionAlongLinkBeingTraversed = 0;
 			}
 		}
-
 	}
+
+	// Draw.
+
+	draw(universe, world, place)
+	{
+		var mover = this;
+
+		if (mover.name == "Player")
+		{
+			this.draw_Player(universe, world, place);
+		}
+
+		var defn = this.defn();
+		var visual = defn.visual;
+		visual.draw(universe, world, place, this);
+	}
+
+	draw_Player(universe, world, place)
+	{
+		var display = universe.display;
+		var network = place.network;
+
+		var mover = this;
+
+		var playerSize = 8;
+		var playerSizeHalf = playerSize / 2;
+
+		var nodes = network.nodes;
+		var nodeIndex = mover.nodeIndexPrev;
+		var nodePrevPos = nodes[nodeIndex].pos;
+
+		var nodeNextPos;
+
+		var linkBeingTraversed = mover.linkBeingTraversed;
+
+		if (linkBeingTraversed == null)
+		{
+			nodeNextPos = nodePrevPos;
+		}
+		else
+		{
+			var nodeNextIndex = 
+			(
+				linkBeingTraversed.nodeIndicesFromTo[0] == mover.nodeIndexPrev
+				? linkBeingTraversed.nodeIndicesFromTo[1]
+				: linkBeingTraversed.nodeIndicesFromTo[0]
+			);
+
+			var nodeNext = nodes[nodeNextIndex];
+			var nodeNextPos = nodeNext.pos;
+		}
+
+		var displacementFromNodePrevToNext =
+			nodeNextPos.clone().subtract
+			(
+				nodePrevPos
+			);
+
+		var distanceFromNodePrevToNext =
+			displacementFromNodePrevToNext.magnitude();
+
+		var drawPos = nodePrevPos.clone();
+
+		if (distanceFromNodePrevToNext > 0)
+		{
+			var displacementFromNodePrevToMover =
+				displacementFromNodePrevToNext.divideScalar
+				(
+					distanceFromNodePrevToNext
+				).multiplyScalar
+				(
+					mover.distanceAlongLinkBeingTraversed
+				);
+
+			drawPos.add
+			(
+				displacementFromNodePrevToMover
+			);
+		}
+
+		var g = display.graphics;
+
+		g.strokeStyle = display.colorHighlight;
+		g.beginPath();
+		g.moveTo(nodePrevPos.x, nodePrevPos.y);
+		g.lineTo(drawPos.x, drawPos.y);
+		g.stroke();
+	}
+
 }

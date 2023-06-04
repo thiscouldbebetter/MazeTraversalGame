@@ -89,10 +89,11 @@ class PlaceNetwork
 
 	// Drawing.
 
-	drawToDisplay(display)
+	draw(universe, world)
 	{
-		display.drawBackground();
-		this.network.drawToDisplay(display);
+		var color = Color.Instances().Black;
+		universe.display.drawBackground(color);
+		this.network.draw(universe, world, this);
 	}
 
 }
