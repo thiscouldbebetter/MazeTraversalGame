@@ -167,7 +167,6 @@ function main()
 		[
 			0, 5, 65, 68
 		],
-		4, // numberOfEnemiesToSpawn
 		49, // indexOfNodeToSpawnPlayerFrom
 		30 // indexOfNodeToSpawnEnemiesFrom
 	);

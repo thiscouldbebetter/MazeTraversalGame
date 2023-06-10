@@ -61,7 +61,7 @@ class PlaceNetwork
 
 					if (distanceFromEnemyToPlayer <= collisionRadius)
 					{
-						if (moverForPlayer.powerUpTicksRemaining == 0)
+						if (moverForPlayer.powerupTicksRemaining == 0)
 						{
 							moverForPlayer.hasBeenEaten = true;
 							movers.splice
@@ -81,9 +81,9 @@ class PlaceNetwork
 
 		);
 
-		if (moverForPlayer.powerUpTicksRemaining > 0)
+		if (moverForPlayer.powerupTicksRemaining > 0)
 		{
-			moverForPlayer.powerUpTicksRemaining--;
+			moverForPlayer.powerupTicksRemaining--;
 		}
 	}
 

@@ -28,6 +28,10 @@ class Color_Instances
 	{
 		this.Black = new Color("Black", "Black");
 		this.Blue = new Color("Blue", "Blue");
+		this.Cyan = new Color("Cyan", "Cyan");
+		this.Gray = new Color("Gray", "Gray");
+		this.Orange = new Color("Orange", "Orange");
+		this.Pink = new Color("Pink", "Pink");
 		this.Red = new Color("Red", "Red");
 		this.White = new Color("White", "White");
 
@@ -35,6 +39,10 @@ class Color_Instances
 		[
 			this.Black,
 			this.Blue,
+			this.Cyan,
+			this.Orange,
+			this.Pink,
+			this.Gray,
 			this.Red,
 			this.White
 		];

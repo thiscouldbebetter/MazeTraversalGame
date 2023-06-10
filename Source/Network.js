@@ -7,7 +7,6 @@ class Network
 		nodes, 
 		nodeIndexPairsAdjacent, 
 		indicesOfNodesWithPowerups, 
-		numberOfEnemiesToSpawn,
 		indexOfNodeToSpawnPlayerFrom,
 		indexOfNodeToSpawnEnemiesFrom
 	)
@@ -78,15 +77,23 @@ class Network
 
 		this.moversForEnemies = [];
 
-		this.numberOfEnemiesToSpawn = numberOfEnemiesToSpawn;
 		this.indexOfNodeToSpawnEnemiesFrom = indexOfNodeToSpawnEnemiesFrom;
 
-		for (var i = 0; i < numberOfEnemiesToSpawn; i++)
+		var moverDefnsForEnemies = 
+		[
+			moverDefns.EnemyAmbusher,
+			moverDefns.EnemyChaser,
+			moverDefns.EnemyFlanker,
+			moverDefns.EnemyLurker
+		];
+
+		for (var i = 0; i < moverDefnsForEnemies.length; i++)
 		{
+			var moverDefn = moverDefnsForEnemies[i];
 			var moverForEnemy = new Mover
 			(
 				"Enemy" + i,
-				moverDefns.Enemy.name,
+				moverDefn.name,
 				new Intelligence_Machine(),
 				this.indexOfNodeToSpawnEnemiesFrom
 			);
@@ -208,20 +215,12 @@ class Network
 	{
 		if (node.hasPowerup)
 		{
-			var powerupSize = 8;
-			var powerupSizeHalf = powerupSize / 2;
-
-			var drawPos = node.pos;
-
-			var g = display.graphics;
-			g.strokeStyle = display.colorFore;
-			g.beginPath();
-			g.moveTo(drawPos.x - powerupSizeHalf, drawPos.y);
-			g.lineTo(drawPos.x, drawPos.y - powerupSizeHalf);
-			g.lineTo(drawPos.x + powerupSizeHalf, drawPos.y);
-			g.lineTo(drawPos.x, drawPos.y + powerupSizeHalf);
-			g.closePath();
-			g.stroke();
+			var pos = node.pos;
+			var disp = new Disposition(0, pos);
+			var entityFake = { disp: disp };
+			var universeFake = { display: display };
+			var visual = Visual.Instances().Powerup;
+			visual.draw(universeFake, null, null, entityFake);
 		}
 	}
 

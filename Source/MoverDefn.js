@@ -30,27 +30,44 @@ class MoverDefn_Instances
 		var colors = Color.Instances();
 		var sizeDefault = new Coords(10, 10);
 
-		this.Enemy = new MoverDefn
+		var visuals = Visual.Instances();
+
+		this.EnemyAmbusher = new MoverDefn
 		(
-			"Enemy",
-			VisualRectangle.fromSizeAndColorName
-			(
-				sizeDefault, colors.Red.name
-			)
+			"EnemyAmbusher",
+			visuals.EnemyAmbusher
+		);
+
+		this.EnemyChaser = new MoverDefn
+		(
+			"EnemyChaser",
+			visuals.EnemyChaser
+		);
+
+		this.EnemyFlanker = new MoverDefn
+		(
+			"EnemyFlanker",
+			visuals.EnemyFlanker
+		);
+
+		this.EnemyLurker = new MoverDefn
+		(
+			"EnemyLurker",
+			visuals.EnemyLurker
 		);
 
 		this.Player = new MoverDefn
 		(
 			"Player",
-			VisualRectangle.fromSizeAndColorName
-			(
-				sizeDefault, colors.Blue.name
-			)
+			visuals.Player
 		);
 
 		this._All =
 		[
-			this.Enemy,
+			this.EnemyAmbusher,
+			this.EnemyChaser,
+			this.EnemyFlanker,
+			this.EnemyLurker,
 			this.Player
 		];
 

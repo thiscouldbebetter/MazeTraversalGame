@@ -12,12 +12,62 @@ class Mover
 		this.directionAlongLinkBeingTraversed = 0;
 
 		this.hasBeenEaten = false;
-		this.powerUpTicksRemaining = 0;
+		this.powerupTicksRemaining = 0;
+
+		this.disp = Disposition.create();
 	}
 
 	defn()
 	{
 		return MoverDefn.byName(this.defnName);
+	}
+
+	headingInTurns(network)
+	{
+		var nodePrevPos = network.nodes[this.nodeIndexPrev].pos;
+
+		var nodeNextPos;
+
+		var linkBeingTraversed = this.linkBeingTraversed;
+
+		if (linkBeingTraversed == null)
+		{
+			nodeNextPos = nodePrevPos;
+		}
+		else
+		{
+			var nodeNextIndex = 
+			(
+				linkBeingTraversed.nodeIndicesFromTo[0] == this.nodeIndexPrev
+				? linkBeingTraversed.nodeIndicesFromTo[1]
+				: linkBeingTraversed.nodeIndicesFromTo[0]
+			);
+
+			var nodeNextPos = network.nodes[nodeNextIndex].pos;
+		}
+
+		var displacementFromNodePrevToNext =
+			nodeNextPos.clone().subtract
+			(
+				nodePrevPos
+			);
+
+		var headingInRadians = Math.atan2
+		(
+			displacementFromNodePrevToNext.y,
+			displacementFromNodePrevToNext.x,
+		);
+
+		var radiansPerTurn = Math.PI * 2;
+
+		var headingInTurns = headingInRadians / radiansPerTurn;
+
+		if (headingInTurns < 0)
+		{
+			headingInTurns += 1;
+		}
+
+		return headingInTurns;
 	}
 
 	pos(network)
@@ -77,6 +127,15 @@ class Mover
 
 	updateForTimerTick(universe, world, place)
 	{
+		var network = place.network;
+
+		var disp = this.disp;
+		disp.pos.overwriteWith
+		(
+			this.pos(network)
+		);
+		disp.headingInTurns = this.headingInTurns(network);
+
 		var directionToMove = this.intelligence.actionDecide
 		(
 			universe, world, place, this
@@ -220,7 +279,7 @@ class Mover
 						if (nodeArrivedAt.hasPowerup)
 						{
 							nodeArrivedAt.hasPowerup = false;
-							this.powerUpTicksRemaining = 100;
+							this.powerupTicksRemaining = 100;
 						}
 
 						if (nodeArrivedAt.nodeToTeleportToIndex != null)

@@ -61,6 +61,11 @@ class Coords
 		return this.divideScalar(2);
 	}
 
+	invert()
+	{
+		return this.multiplyScalar(-1);
+	}
+
 	magnitude()
 	{
 		return Math.sqrt

@@ -1,17 +1,15 @@
 
 class VisualRectangle
 {
-	constructor(size, colorName)
+	constructor(colorName, size)
 	{
-		this.size = size;
 		this.colorName = colorName;
-
-		this._drawPos = new Coords();
+		this.size = size;
 	}
 
 	static fromSizeAndColorName(size, colorName)
 	{
-		return new VisualRectangle(size, colorName);
+		return new VisualRectangle(colorName, size);
 	}
 
 	color()
@@ -21,19 +19,10 @@ class VisualRectangle
 
 	draw(universe, world, place, entity)
 	{
-		var entityPos = entity.pos(place.network);
-		var drawPos =
-			this._drawPos.overwriteWith(entityPos);
-		var color = this.color();
-
-		var display = universe.display;
-
-		display.drawRectangleOfSizeWithCenterAndColorsFillAndBorder
+		var pos = entity.disp.pos;
+		universe.display.drawRectangleWithCenterSizeAndColor
 		(
-			this.size,
-			drawPos,
-			color,
-			null // colorBorder
+			pos, this.size, this.color()
 		);
 	}
 }
