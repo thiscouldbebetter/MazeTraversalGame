@@ -14,6 +14,8 @@ class Network
 		this.name = name;
 		this.nodes = nodes;
 
+		this.powerupDurationInTicks = 250;
+
 		this.links = [];
 
 		for (var p = 0; p < nodeIndexPairsAdjacent.length; p++)
@@ -23,8 +25,10 @@ class Network
 			var nodeIndex0 = nodeIndexPair[0];
 			var nodeIndex1 = nodeIndexPair[1];
 
-			this.nodes[nodeIndex0].nodeIndicesAdjacent.push(nodeIndex1);
-			this.nodes[nodeIndex1].nodeIndicesAdjacent.push(nodeIndex0);
+			var node0 = this.nodes[nodeIndex0];
+			node0.nodeIndicesAdjacent.push(nodeIndex1);
+			var node1 = this.nodes[nodeIndex1];
+			node1.nodeIndicesAdjacent.push(nodeIndex0);
 
 			var link = new NetworkLink
 			(
@@ -41,11 +45,13 @@ class Network
 				var nodeIndexThisAsString = "_" + nodeIndexThis;
 				var nodeIndexOtherAsString = "_" + nodeIndexOther;
 			
-				var linksFromThisNode = this.links[nodeIndexThisAsString];
+				var linksFromThisNode =
+					this.links[nodeIndexThisAsString];
 				if (linksFromThisNode == null)
 				{
 					linksFromThisNode = [];
-					this.links[nodeIndexThisAsString] = linksFromThisNode
+					this.links[nodeIndexThisAsString] =
+						linksFromThisNode;
 				}
 
 				linksFromThisNode[nodeIndexOtherAsString] = link;
@@ -54,8 +60,10 @@ class Network
 
 		for (var i = 0; i < indicesOfNodesWithPowerups.length; i++)
 		{
-			var indexOfNodeWithPowerup = indicesOfNodesWithPowerups[i];
-			var nodeWithPowerup = this.nodes[indexOfNodeWithPowerup];
+			var indexOfNodeWithPowerup =
+				indicesOfNodesWithPowerups[i];
+			var nodeWithPowerup =
+				this.nodes[indexOfNodeWithPowerup];
 			nodeWithPowerup.hasPowerup = true;
 		}
 
@@ -63,13 +71,13 @@ class Network
 
 		this.movers = [];
 
-		this.indexOfNodeToSpawnPlayerFrom = indexOfNodeToSpawnPlayerFrom;
+		this.indexOfNodeToSpawnPlayerFrom =
+			indexOfNodeToSpawnPlayerFrom;
 
 		this.moverForPlayer = new Mover
 		(
 			"Player",
 			moverDefns.Player.name,
-			new Intelligence_Human(),
 			this.indexOfNodeToSpawnPlayerFrom 
 		);
 
@@ -77,7 +85,8 @@ class Network
 
 		this.moversForEnemies = [];
 
-		this.indexOfNodeToSpawnEnemiesFrom = indexOfNodeToSpawnEnemiesFrom;
+		this.indexOfNodeToSpawnEnemiesFrom =
+			indexOfNodeToSpawnEnemiesFrom;
 
 		var moverDefnsForEnemies = 
 		[
@@ -94,7 +103,6 @@ class Network
 			(
 				"Enemy" + i,
 				moverDefn.name,
-				new Intelligence_Machine(),
 				this.indexOfNodeToSpawnEnemiesFrom
 			);
 

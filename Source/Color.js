@@ -33,6 +33,7 @@ class Color_Instances
 		this.Orange = new Color("Orange", "Orange");
 		this.Pink = new Color("Pink", "Pink");
 		this.Red = new Color("Red", "Red");
+		this.Transparent = new Color("Transparent", "rgba(0, 0, 0, 0)");
 		this.White = new Color("White", "White");
 
 		this._All =
@@ -44,6 +45,7 @@ class Color_Instances
 			this.Pink,
 			this.Gray,
 			this.Red,
+			this.Transparent,
 			this.White
 		];
 

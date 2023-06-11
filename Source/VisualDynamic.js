@@ -14,12 +14,12 @@ class VisualDynamic
 	draw(universe, world, place, entity)
 	{
 		var visual =
-			this.visualGetForMover(display, mover);
+			this.visualGet(universe, world, place, entity);
 		visual.draw(universe, world, place, entity);
 	}
 
-	visualGetForMover(mover)
+	visualGet(universe, world, place, entity)
 	{
-		return this._visualGetForMover(mover);
+		return this._visualGetForMover(universe, world, place, entity);
 	}
 }

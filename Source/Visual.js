@@ -24,40 +24,88 @@ class Visual_Instances
 
 		var radiusPlayer = 8;
 
+		var enemyVisualVulnerable =
+			VisualBuilder.faceOfColorWithRadius
+			(
+				colors.Blue, radiusPlayer
+			);
+
+		var enemyVisualEaten =
+			VisualBuilder.faceOfColorWithRadius
+			(
+				colors.Transparent, radiusPlayer
+			);
+
+		var enemyVisualBuild = (enemyVisualNormal) =>
+		{
+			return new VisualDynamic
+			(
+				(u, w, p, e) =>
+				{
+					var visualSelected;
+					if (e.hasBeenEaten)
+					{
+						visualSelected = enemyVisualEaten;
+					}
+					else
+					{
+						var player = p.network.moverForPlayer;
+						var isVulnerable =
+							(player.powerupTicksRemaining > 0);
+						visualSelected =
+						(
+							isVulnerable
+							? enemyVisualVulnerable
+							: enemyVisualNormal
+						);
+					}
+					return visualSelected;
+				}
+			)
+		};
+
+		var enemyAmbusherNormal = VisualBuilder.faceOfColorWithRadius
+		(
+			colors.Pink, radiusPlayer
+		);
+
 		this.EnemyAmbusher = new VisualNamed
 		(
 			"EnemyAmbusher",
-			VisualBuilder.faceOfColorWithRadius
-			(
-				colors.Pink, radiusPlayer
-			)
+			enemyVisualBuild(enemyAmbusherNormal)
+		);
+
+		var enemyChaserNormal = VisualBuilder.faceOfColorWithRadius
+		(
+			colors.Red, radiusPlayer
 		);
 
 		this.EnemyChaser = new VisualNamed
 		(
 			"EnemyChaser",
-			VisualBuilder.faceOfColorWithRadius
-			(
-				colors.Red, radiusPlayer
-			)
+			enemyVisualBuild(enemyChaserNormal)
+		);
+
+		var enemyFlankerNormal = VisualBuilder.faceOfColorWithRadius
+		(
+			colors.Cyan, radiusPlayer
 		);
 
 		this.EnemyFlanker = new VisualNamed
 		(
 			"EnemyFlanker",
-			VisualBuilder.faceOfColorWithRadius
-			(
-				colors.Cyan, radiusPlayer
-			)
+			enemyVisualBuild(enemyFlankerNormal)
+		);
+
+		var enemyLurkerNormal = VisualBuilder.faceOfColorWithRadius
+		(
+			colors.Orange, radiusPlayer
 		);
 
 		this.EnemyLurker = new VisualNamed
 		(
 			"EnemyLurker",
-			VisualBuilder.faceOfColorWithRadius
-			(
-				colors.Orange, radiusPlayer
-			)
+			enemyVisualBuild(enemyLurkerNormal)
 		);
 
 		var player = VisualBuilder.faceOfColorWithRadius(colors.Gray, radiusPlayer);

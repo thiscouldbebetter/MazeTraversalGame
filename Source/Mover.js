@@ -1,11 +1,15 @@
 
 class Mover
 {
-	constructor(name, defnName, intelligence, nodeIndexInitial)
+	constructor
+	(
+		name,
+		defnName,
+		nodeIndexInitial
+	)
 	{
 		this.name = name;
 		this.defnName = defnName;
-		this.intelligence = intelligence;
 		this.nodeIndexPrev = nodeIndexInitial;
 		this.linkBeingTraversed = null;
 		this.distanceAlongLinkBeingTraversed =  0;
@@ -36,12 +40,7 @@ class Mover
 		}
 		else
 		{
-			var nodeNextIndex = 
-			(
-				linkBeingTraversed.nodeIndicesFromTo[0] == this.nodeIndexPrev
-				? linkBeingTraversed.nodeIndicesFromTo[1]
-				: linkBeingTraversed.nodeIndicesFromTo[0]
-			);
+			var nodeNextIndex = this.nodeNextIndex();
 
 			var nodeNextPos = network.nodes[nodeNextIndex].pos;
 		}
@@ -68,6 +67,30 @@ class Mover
 		}
 
 		return headingInTurns;
+	}
+
+	nodeNextIndex()
+	{
+		var returnValue;
+
+		if (this.linkBeingTraversed == null)
+		{
+			returnValue = this.nodeIndexPrev;
+		}
+		else
+		{
+			var nodeIndicesFromTo =
+				this.linkBeingTraversed.nodeIndicesFromTo;
+
+			var returnValue = 
+			(
+				nodeIndicesFromTo[0] == this.nodeIndexPrev
+				? nodeIndicesFromTo[1]
+				: nodeIndicesFromTo[0]
+			);
+		}
+
+		return returnValue;
 	}
 
 	pos(network)
@@ -136,7 +159,9 @@ class Mover
 		);
 		disp.headingInTurns = this.headingInTurns(network);
 
-		var directionToMove = this.intelligence.actionDecide
+		var defn = this.defn();
+		var intelligence = defn.intelligence;
+		var directionToMove = intelligence.actionDecide
 		(
 			universe, world, place, this
 		);
@@ -240,7 +265,10 @@ class Mover
 		}
 	}
 
-	updateForTimerTick_2_2(universe, world, place, directionToMove, moverNodeIndexNext)
+	updateForTimerTick_2_2
+	(
+		universe, world, place, directionToMove, moverNodeIndexNext
+	)
 	{
 		var network = place.network;
 		var linkBeingTraversed = this.linkBeingTraversed;
@@ -274,12 +302,14 @@ class Mover
 							}
 						}
 
-						var nodeArrivedAt = network.nodes[moverNodeIndexNext];
+						var nodeArrivedAt =
+							network.nodes[moverNodeIndexNext];
 
 						if (nodeArrivedAt.hasPowerup)
 						{
 							nodeArrivedAt.hasPowerup = false;
-							this.powerupTicksRemaining = 100;
+							this.powerupTicksRemaining =
+								network.powerupDurationInTicks;
 						}
 
 						if (nodeArrivedAt.nodeToTeleportToIndex != null)
