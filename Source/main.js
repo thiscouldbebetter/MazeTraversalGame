@@ -163,6 +163,7 @@ function main()
 			[66, 67],
 			[67, 68],
 		],
+		[27, 33], // nodeIndexPairConnectedByTeleport
 		// indicesOfNodesWithPowerups
 		[
 			0, 5, 65, 68

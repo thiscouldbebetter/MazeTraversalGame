@@ -5,7 +5,8 @@ class Network
 	(
 		name, 
 		nodes, 
-		nodeIndexPairsAdjacent, 
+		nodeIndexPairsAdjacent,
+		nodeIndexPairConnectedByTeleport,
 		indicesOfNodesWithPowerups, 
 		indexOfNodeToSpawnPlayerFrom,
 		indexOfNodeToSpawnEnemiesFrom
@@ -13,6 +14,11 @@ class Network
 	{
 		this.name = name;
 		this.nodes = nodes;
+		this.nodeIndexPairsAdjacent = nodeIndexPairsAdjacent;
+		this.nodeIndexPairConnectedByTeleport = nodeIndexPairConnectedByTeleport;
+		this.indicesOfNodesWithPowerups = indicesOfNodesWithPowerups;
+		this.indexOfNodeToSpawnPlayerFrom = indexOfNodeToSpawnPlayerFrom;
+		this.indexOfNodeToSpawnEnemiesFrom = indexOfNodeToSpawnEnemiesFrom;
 
 		this.powerupDurationInTicks = 250;
 
@@ -158,6 +164,22 @@ class Network
 		);
 
 		return [nodePosMin, nodePosMax];
+	}
+
+	// Clonable.
+
+	clone()
+	{
+		return new Network
+		(
+			this.name, 
+			this.nodes,
+			this.nodeIndexPairsAdjacent, 
+			this.nodeIndexPairConnectedByTeleport,
+			this.indicesOfNodesWithPowerups,
+			this.indexOfNodeToSpawnPlayerFrom,
+			this.indexOfNodeToSpawnEnemiesFrom
+		);
 	}
 
 	// Drawing.

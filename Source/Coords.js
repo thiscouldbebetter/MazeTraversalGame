@@ -21,7 +21,7 @@ class Coords
 	{
 		this.x = Math.abs(this.x);
 		this.y = Math.abs(this.y);
-		
+
 		return this;
 	}
 
@@ -29,6 +29,14 @@ class Coords
 	{
 		this.x += other.x;
 		this.y += other.y;
+
+		return this;
+	}
+
+	addXY(x, y)
+	{
+		this.x += x;
+		this.y += y;
 
 		return this;
 	}

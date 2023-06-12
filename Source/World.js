@@ -10,9 +10,23 @@ class World
 		this.placeNextIndex = null;
 	}
 
+	placeAdvance()
+	{
+		this.placeNextIndex = this.placeCurrentIndex + 1;
+		if (this.placeNextIndex >= this.places.length)
+		{
+			this.placeNextIndex = 0;
+		}
+	}
+
 	placeCurrent()
 	{
 		return this.places[this.placeCurrentIndex];
+	}
+
+	toVenue()
+	{
+		return new VenueWorld(this);
 	}
 
 	// Drawing.

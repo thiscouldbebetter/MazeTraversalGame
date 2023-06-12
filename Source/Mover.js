@@ -275,7 +275,7 @@ class Mover
 
 		if (linkBeingTraversed != null)
 		{
-			var moverSpeed = 2; // hack
+			var moverSpeed = 3; // hack
 
 			var moverVelocity =
 				moverSpeed
@@ -298,7 +298,16 @@ class Mover
 							network.numberOfLinksTraversedByPlayer++;
 							if (network.numberOfLinksTraversedByPlayer >= network.links.length)
 							{
-								alert("You win!");
+								var message = "Level complete!"
+								var venueNext = new VenueMessage
+								(
+									message,
+									(u) =>
+									{
+										u.world.placeAdvance();
+									}
+								);
+								universe.venueNextSet(venueNext);
 							}
 						}
 
@@ -312,9 +321,14 @@ class Mover
 								network.powerupDurationInTicks;
 						}
 
-						if (nodeArrivedAt.nodeToTeleportToIndex != null)
+						var nodeIndexPairTeleport =
+							network.nodeIndexPairConnectedByTeleport;
+						if (nodeIndexPairTeleport.indexOf(moverNodeIndexNext) >= 0)
 						{
-							todo
+							moverNodeIndexNext = nodeIndexPairTeleport.find
+							(
+								x => x != moverNodeIndexNext
+							);
 						}
 					}
 					else if (this.name.startsWith("Enemy") )

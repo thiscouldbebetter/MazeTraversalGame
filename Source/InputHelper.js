@@ -1,18 +1,52 @@
 
 class InputHelper
 {
-	handleEventKeyDown(event)
+	constructor()
 	{
-		this.keyPressed = event.key;
+		this.keysPressed = [];
+	}
+
+	keyIsPressed(keyToCheck)
+	{
+		return (this.keysPressed.indexOf(keyToCheck) >= 0);
+	}
+
+	keyRelease(keyToRelease)
+	{
+		var keyIndex = this.keysPressed.indexOf(keyToRelease);
+		if (keyIndex >= 0)
+		{
+			this.keysPressed.splice(keyIndex, 1);
+		}
 	}
 
 	initialize()
 	{
-		document.body.onkeydown = this.handleEventKeyDown.bind(this);
+		var body = document.body;
+		body.onkeydown = this.handleEventKeyDown.bind(this);
+		body.onkeyup = this.handleEventKeyUp.bind(this);
 	}
 
 	updateForTimerTick()
 	{
-		this.keyCode = null;
+		// todo
 	}
+
+	// Event handlers.
+
+	handleEventKeyDown(event)
+	{
+		var key = event.key;
+		if (this.keysPressed.indexOf(key) == -1)
+		{
+			this.keysPressed.push(key);
+		}
+	}
+
+	handleEventKeyUp(event)
+	{
+		var key = event.key;
+		this.keyRelease(key);
+	}
+
 }

@@ -10,9 +10,25 @@ class Display
 		this.colorLowlight = "DarkGray";
 		this.colorBack = "Black";
 
-		this._drawPos = new Coords();
+		this.sizeInPixelsHalf = this.sizeInPixels.clone().half();
+
 		this._sizeHalf = new Coords();
+		this._drawPos = new Coords();
 	}
+
+	initialize()
+	{
+		var d = document;
+		var canvas = d.createElement("canvas");
+		canvas.width = this.sizeInPixels.x;
+		canvas.height = this.sizeInPixels.y;
+		var divDisplay = d.getElementById("divDisplay");
+		divDisplay.appendChild(canvas);
+
+		this.graphics = canvas.getContext("2d");
+	}
+
+	// Drawing.
 
 	drawBackground(color)
 	{
@@ -23,6 +39,18 @@ class Display
 			color,
 			null // colorBorder
 		);
+	}
+
+	drawCircleWithCenterRadiusAndColor(center, radius, color)
+	{
+		var g = this.graphics;
+		g.fillStyle = color.systemColor;
+		g.beginPath();
+		g.arc
+		(
+			center.x, center.y, radius, 0, Math.PI * 2
+		);
+		g.fill();
 	}
 
 	drawRectangleOfSizeAtPosWithColorsFillAndBorder
@@ -65,57 +93,29 @@ class Display
 		);
 	}
 
-	// todo - Integrate these better.
-
-	clear()
-	{
-		this.drawRectangleAtPosWithSizeAndColor
-		(
-			this._zeroes, this.sizeInPixels, Color.Instances().Black
-		);
-	}
-
-	drawCircleWithCenterRadiusAndColor(center, radius, color)
+	drawTextWithFontHeightAndColorAtCenterPos
+	(
+		text, fontName, heightInPixels, color, centerPos
+	)
 	{
 		var g = this.graphics;
-		g.fillStyle = color.systemColor;
-		g.beginPath();
-		g.arc
+
+		var sizeAndFontAsString = heightInPixels + "px " + fontName;
+		g.font = sizeAndFontAsString;
+
+		var textWidth = g.measureText(text).width;
+
+		var drawPos = this._drawPos.overwriteWith
 		(
-			center.x, center.y, radius, 0, Math.PI * 2
-		);
-		g.fill();
-	}
-
-	drawRectangleAtPosWithSizeAndColor(pos, size, color)
-	{
-		var g = this.graphics;
-		g.fillStyle = color.systemColor;
-		g.fillRect
+			centerPos
+		).addXY
 		(
-			pos.x, pos.y, size.x, size.y
+			0 - textWidth / 2, 0 // - heightInPixels / 2 // ?
 		);
+
+		g.fillStyle = color.systemColor;
+
+		g.fillText(text, drawPos.x, drawPos.y);
 	}
 
-	drawRectangleWithCenterSizeAndColor(center, size, color)
-	{
-		var drawPos =
-			this._drawPos.overwriteWith(size).half().invert().add(center);
-
-		this.drawRectangleAtPosWithSizeAndColor(drawPos, size, color);
-	}
-
-	// end todo
-
-	initialize()
-	{
-		var d = document;
-		var canvas = d.createElement("canvas");
-		canvas.width = this.sizeInPixels.x;
-		canvas.height = this.sizeInPixels.y;
-		var divDisplay = d.getElementById("divDisplay");
-		divDisplay.appendChild(canvas);
-
-		this.graphics = canvas.getContext("2d");
-	}
 }

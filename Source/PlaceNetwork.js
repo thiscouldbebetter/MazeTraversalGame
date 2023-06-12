@@ -4,12 +4,19 @@ class PlaceNetwork
 	constructor(name, network)
 	{
 		this.name = name;
-		this.network = network;
+		this._networkInitial = network;
+
+		this.network = this._networkInitial.clone();
 	}
 
 	initialize(universe, world)
 	{
 		// todo
+	}
+
+	restart(universe, world)
+	{
+		this.network = this._networkInitial.clone();
 	}
 
 	updateForTimerTick(universe, world)
@@ -69,7 +76,17 @@ class PlaceNetwork
 								movers.indexOf(moverForPlayer),
 								1
 							);
-							document.write("You lose!");
+							var venueNext = new VenueMessage
+							(
+								"You lose!",
+								(u) =>
+								{
+									var w = u.world;
+									w.placeCurrent().restart(u, w);
+									u.venueNextSet(w.toVenue() );
+								}
+							);
+							universe.venueNextSet(venueNext);
 						}
 						else
 						{

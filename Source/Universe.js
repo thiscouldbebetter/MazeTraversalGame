@@ -21,15 +21,33 @@ class Universe
 		this.world.initialize(this);
 		this.inputHelper.initialize(this);
 		this.timerHelper.initialize(this);
+
+		var venueInitial = new VenueMessage
+		(
+			"Press Enter to start.",
+			(u) => u.venueNextSet(u.world.toVenue() )
+		);
+		this.venueNextSet(venueInitial);
 	}
 
 	updateForTimerTick()
 	{
-		this.world.updateForTimerTick(this);
+		if (this.venueNext != null)
+		{
+			if (this.venueCurrent != null)
+			{
+				this.venueCurrent.finalize(this);
+			}
+			this.venueCurrent = this.venueNext;
+			this.venueCurrent.initialize(this);
+		}
 
+		this.venueCurrent.updateForTimerTick(this);
 		this.inputHelper.updateForTimerTick(this);
-
-		this.world.draw(this);
 	}
 
+	venueNextSet(value)
+	{
+		this.venueNext = value;
+	}
 }

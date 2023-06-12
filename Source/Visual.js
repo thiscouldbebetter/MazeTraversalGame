@@ -30,6 +30,12 @@ class Visual_Instances
 				colors.Blue, radiusPlayer
 			);
 
+		var enemyVisualVulnerabilityAlmostElapsed =
+			VisualBuilder.faceOfColorWithRadius
+			(
+				colors.White, radiusPlayer
+			);
+
 		var enemyVisualEaten =
 			VisualBuilder.faceOfColorWithRadius
 			(
@@ -50,14 +56,20 @@ class Visual_Instances
 					else
 					{
 						var player = p.network.moverForPlayer;
-						var isVulnerable =
-							(player.powerupTicksRemaining > 0);
-						visualSelected =
-						(
-							isVulnerable
-							? enemyVisualVulnerable
-							: enemyVisualNormal
-						);
+						var powerupTicksRemaining =
+							player.powerupTicksRemaining;
+						if (powerupTicksRemaining > 100)
+						{
+							visualSelected = enemyVisualVulnerable;
+						}
+						else if (powerupTicksRemaining > 0)
+						{
+							visualSelected = enemyVisualVulnerabilityAlmostElapsed;
+						}
+						else
+						{
+							visualSelected = enemyVisualNormal;
+						}
 					}
 					return visualSelected;
 				}
